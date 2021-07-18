@@ -38,7 +38,7 @@ while True:
         cv.putText(frame, str(len(approx)) + " points", (x, y - 20), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
 
     cv.imshow("frame", frame)
-    cv.imshow("mask", mask)
+    # cv.imshow("mask", mask)
 
     if cv.waitKey(5) == 113:
         break
