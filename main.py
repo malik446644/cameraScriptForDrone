@@ -35,6 +35,7 @@ while True:
         # selecting rectangle on the biggest contour
         x,y,w,h = cv.boundingRect(biggestConture)
         cv.rectangle(frame,(x,y),(x+w,y+h),(0,255,0) if len(approx) == 3 else (0,0,255),2)
+        cv.circle(frame, (x + w//2, y + h//2), 2, (0, 0, 255), -1)
         cv.putText(frame, str(len(approx)) + " points", (x, y - 20), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
 
     cv.imshow("frame", frame)
