@@ -1,8 +1,6 @@
 import numpy as np
 import cv2  as cv
 
-cap = cv.VideoCapture(0)
-
 # controls
 def nothing(v):
     pass
@@ -10,11 +8,15 @@ cv.namedWindow("controls")
 cv.createTrackbar("lower_hue", "controls", 56, 255, nothing)
 cv.createTrackbar("upper_hue", "controls", 78, 255, nothing)
 
+cap = cv.VideoCapture(0)
+
 # video stream while loop
 while True:
     _, frame = cap.read()
+    # making a blured version of the current frame
+    bluredFrame = cv.blur(frame, (7, 7))
     # Converting BGR to HSV for better color selecting
-    hsv = cv.cvtColor(cv.blur(frame, (15, 15)), cv.COLOR_BGR2HSV)
+    hsv = cv.cvtColor(bluredFrame, cv.COLOR_BGR2HSV)
     # selecting range of green color using HSV
     lowerHue = cv.getTrackbarPos("lower_hue", "controls")
     upperHue = cv.getTrackbarPos("upper_hue", "controls")
@@ -25,14 +27,16 @@ while True:
     contours, _ = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
 
     if len(contours) != 0:
-        cv.drawContours(frame, contours, -1, 255, 3)
         # find the biggest countour (c) by the area
         biggestConture = max(contours, key = cv.contourArea)
+        cv.drawContours(frame, [biggestConture], -1, (0, 0, 255), -1)
+        # reduce the ammount of points to know the shapes
+        peri = cv.arcLength(biggestConture, True)
+        approx = cv.approxPolyDP(biggestConture, 0.04 * peri, True)
+        print(len(approx))
+        # draw rectangle on the biggest contour (c) in green
         x,y,w,h = cv.boundingRect(biggestConture)
-        # draw the biggest contour (c) in green
         cv.rectangle(frame,(x,y),(x+w,y+h),(0,255,0),2)
-
-    cv.drawContours(frame, contours, -1, (0, 255, 0), 2)
 
     cv.imshow("frame", frame)
     cv.imshow("mask", mask)
