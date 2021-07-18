@@ -22,7 +22,7 @@ while True:
     upper_blue = np.array([upperHue,255,255])
     # making binary image as a mask using the hsv color range
     mask = cv.inRange(hsv, lower_blue, upper_blue)
-    contours, _ = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_NONE)
+    contours, _ = cv.findContours(mask, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
 
     if len(contours) != 0:
         cv.drawContours(frame, contours, -1, 255, 3)
