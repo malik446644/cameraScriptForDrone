@@ -9,6 +9,8 @@ cv.createTrackbar("lower_hue", "controls", 56, 255, nothing)
 cv.createTrackbar("upper_hue", "controls", 78, 255, nothing)
 
 cap = cv.VideoCapture(0)
+capWidth = cap.get(3)
+capHeight = cap.get(4)
 
 # video stream while loop
 while True:
@@ -35,8 +37,13 @@ while True:
         # selecting rectangle on the biggest contour
         x,y,w,h = cv.boundingRect(biggestConture)
         cv.rectangle(frame,(x,y),(x+w,y+h),(0,255,0) if len(approx) == 3 else (0,0,255),2)
-        cv.circle(frame, (x + w//2, y + h//2), 2, (0, 0, 255), -1)
+        contourCenter = (x + w//2, y + h//2)
+        cv.circle(frame, contourCenter, 2, (0, 0, 255), -1)
         cv.putText(frame, str(len(approx)) + " points", (x, y - 20), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
+        if (contourCenter[0] > capWidth//2 and contourCenter[1] > capHeight//2): cv.putText(frame, "bottom right", (int(capWidth//2), int(capHeight//2)), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
+        elif (contourCenter[0] < capWidth//2 and contourCenter[1] < capHeight//2): cv.putText(frame, "top left", (int(capWidth//2), int(capHeight//2)), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
+        elif (contourCenter[0] > capWidth//2 and contourCenter[1] < capHeight//2): cv.putText(frame, "top right", (int(capWidth//2), int(capHeight//2)), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
+        else: cv.putText(frame, "bottom left", (int(capWidth//2), int(capHeight//2)), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
 
     cv.imshow("frame", frame)
     # cv.imshow("mask", mask)
