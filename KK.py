@@ -58,3 +58,7 @@ def releaseKey(hexKeyCode):
     ii_.ki = KeyBdInput( 0, hexKeyCode, 0x0008 | 0x0002, 0, ctypes.pointer(extra) )
     x = Input( ctypes.c_ulong(1), ii_ )
     ctypes.windll.user32.SendInput(1, ctypes.pointer(x), ctypes.sizeof(x))
+
+def pressKeyAndRelease(hexKeyCode):
+    pressKey(hexKeyCode)
+    releaseKey(hexKeyCode)

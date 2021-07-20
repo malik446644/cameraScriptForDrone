@@ -5,11 +5,12 @@ import numpy as np
 from mss import mss
 from PIL import Image
 
-import KK
+import kk
+import fps
+import way
 
 # global variables
 isUsingCamera = False
-
 
 # counting to three before starting the script
 for i in range(3):
@@ -22,14 +23,14 @@ if(isUsingCamera):
     capHeight = cap.get(4)
 else:
     capWidth = 1920 // 2
-    capHeight = 1080 
-    bounding_box = {'top': 0, 'left': 0, 'width': capWidth, 'height': capHeight}
+    capHeight = 1080 - 200
+    bounding_box = {'top': 130, 'left': 0, 'width': capWidth, 'height': capHeight}
     sct = mss()
 
 # adding control window to control some parameteres live without restarting the app
 def nothing(v):
     pass
-cv.namedWindow("controls")
+cv.namedWindow("controls", cv.WINDOW_NORMAL)
 cv.createTrackbar("lower_hue", "controls", 56, 255, nothing)
 cv.createTrackbar("upper_hue", "controls", 78, 255, nothing)
 
@@ -62,10 +63,13 @@ while True:
         contourCenter = (x + w//2, y + h//2)
         cv.circle(frame, contourCenter, 2, (0, 0, 255), -1)
         cv.putText(frame, str(len(approx)) + " points", (x, y - 20), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
-        if (contourCenter[0] > capWidth//2 and contourCenter[1] > capHeight//2): cv.putText(frame, "bottom right", (int(0), int(capHeight - 10)), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
-        elif (contourCenter[0] < capWidth//2 and contourCenter[1] < capHeight//2): cv.putText(frame, "top left", (int(0), int(capHeight - 10)), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
-        elif (contourCenter[0] > capWidth//2 and contourCenter[1] < capHeight//2): cv.putText(frame, "top right", (int(0), int(capHeight - 10)), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
-        else: cv.putText(frame, "bottom left", (int(0), int(capHeight - 10)), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
+
+        # going to the detected contour
+        way.findWayAndGo(contourCenter[0], contourCenter[1], capWidth, capHeight)
+
+    # calculate the fps
+    FramePerSecond = fps.calculateFps()
+    cv.putText(frame, "fps: " + str(FramePerSecond), (0, 25), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
 
     cv.imshow("frame", frame)
     # cv.imshow("mask", mask)
@@ -73,5 +77,5 @@ while True:
     if cv.waitKey(5) == 113:
         break
 
-cap.release()
+if(isUsingCamera): cap.release()
 cv.destroyAllWindows()
