@@ -3,9 +3,7 @@ import time
 import cv2  as cv
 import numpy as np
 from mss import mss
-from PIL import Image
 
-import kk
 import fps
 import way
 
