@@ -64,7 +64,7 @@ while True:
         cv.circle(frame, contourCenter, 2, (0, 0, 255), -1)
         cv.putText(frame, str(len(approx)) + " points", (x, y - 20), cv.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), thickness=2)
 
-        # going to the detected contour
+        # going to the detected contour and calculate the way and go to it
         way.findWayAndGo(contourCenter[0], contourCenter[1], capWidth, capHeight)
 
     # calculate the fps
