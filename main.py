@@ -24,7 +24,7 @@ if(isUsingCamera):
 else:
     capWidth = 1920 // 2
     capHeight = 1080 - 200
-    bounding_box = {'top': 130, 'left': 0, 'width': capWidth, 'height': capHeight}
+    bounding_box = {'top': 130, 'left': 0, 'width': capWidth, 'height': capHeight} 
     sct = mss()
 
 # adding control window to control some parameteres live without restarting the app
